@@ -119,8 +119,26 @@ $(function () {
     if (localStorage.sites) {
         sites = JSON.parse(localStorage.sites);
     }
-
+    if (localStorage.saveName) {
+        $('#saveName').prop('checked', true);
+    }
+    $('#name').val(localStorage.name);
     $.each(sites, appendSiteHtml);
-    $('#masterPassword, #name').on('input propertychange paste', generatePasswords);
+
+    $('#masterPassword, #name').on('input propertychange paste', function () {
+        if (localStorage.saveName) {
+            localStorage.name = $('#name').val();
+        }
+        generatePasswords();
+    });
     $('#btnAdd').click(addSite);
+    $('#saveName').click(function () {
+        if ($('#saveName').prop('checked')) {
+            localStorage.saveName = true;
+            localStorage.name = $('#name').val();
+        } else {
+            localStorage.removeItem('saveName');
+            localStorage.name = "";
+        }
+    });
 });
