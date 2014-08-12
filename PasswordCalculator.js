@@ -72,24 +72,47 @@ function wordArrayToUint8Array(wordArray) {
 }
 
 function generatePasswords() {
-    $.each(sites, function (i, item) {
-        $('#password-' + i).val(generatePassword(item));
+    $.each(sites, function (idx, item) {
+        $('#password-' + idx).val(generatePassword(item));
     });
 }
 
-function appendSite(i, item) {
-    $('<div class="panel panel-default">').append(
+function appendSiteHtml(idx, item) {
+    $('<div class="panel panel-default" id="site-panel-' + idx + '">').append(
         $('<div class="panel-heading">').append(
             $('<h4 class="panel-title">').append(
-                $('<a data-toggle="collapse" data-parent="#accordion" href="#collapse-' + i + '">').text(item.name)
+                $('<a data-toggle="collapse" data-parent="#accordion" href="#collapse-' + idx + '">').text(item.name)
             )
         ),
-        $('<div id="collapse-' + i + '" class="panel-collapse collapse">').append(
+        $('<div id="collapse-' + idx + '" class="panel-collapse collapse">').append(
             $('<div class="panel-body">').append(
-                $('<input type="text" readonly class="form-control" id="password-' + i + '">').val('')
+                $('<input type="text" readonly class="form-control" id="password-' + idx + '">').val(''),
+                $('<button class="btn btn-danger pull-right spacer" onclick="removeSite(' + idx + ')">Remove</button>')
             )
         )
     ).appendTo('#accordion');
+}
+
+function addSite() {
+    var site = {
+        "name": $('#site').val(),
+        "template": $('#template').val()
+    };
+    var i = sites.length;
+    appendSiteHtml(i, site);
+    sites.push(site);
+    localStorage.sites = JSON.stringify(sites);
+
+    generatePasswords();
+}
+
+function removeSite(idx) {
+    sites.splice(idx, 1);
+    $('#site-panel-' + idx).remove();
+
+    localStorage.sites = JSON.stringify(sites);
+
+    generatePasswords();
 }
 
 $(function () {
@@ -97,23 +120,7 @@ $(function () {
         sites = JSON.parse(localStorage.sites);
     }
 
-    $.each(sites, function (i, item) {
-        appendSite(i, item);
-    });
-
-    $('#masterPassword, #name').on('input propertychange paste', function () {
-        generatePasswords();
-    });
-    $('#btnAdd').click(function () {
-        var site = {
-            "name": $('#site').val(),
-            "template": $('#template').val()
-        };
-        var i = sites.length;
-        appendSite(i, site);
-        sites.push(site);
-        localStorage.sites = JSON.stringify(sites);
-
-        generatePasswords();
-    });
+    $.each(sites, appendSiteHtml);
+    $('#masterPassword, #name').on('input propertychange paste', generatePasswords);
+    $('#btnAdd').click(addSite);
 });
