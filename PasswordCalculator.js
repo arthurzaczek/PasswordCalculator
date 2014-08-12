@@ -96,7 +96,8 @@ function appendSiteHtml(idx, item) {
 function addSite() {
     var site = {
         "name": $('#site').val(),
-        "template": $('#template').val()
+        "template": $('#template').val(),
+        "counter": "1"
     };
     var i = sites.length;
     appendSiteHtml(i, site);
