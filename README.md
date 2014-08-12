@@ -1,4 +1,6 @@
 PasswordCalculator
 ==================
 
-A Password Generator which calculates the password from a master password, your name and the site name
+A password generator which calculates the password from a master password, your name and the site name
+
+The password generator is published on http://arthurzaczek.github.io/PasswordCalculator/
