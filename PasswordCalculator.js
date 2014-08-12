@@ -1,15 +1,4 @@
-var sites = [
-    {
-        "name": "google.com",
-        "template": "default-long",
-        "counter": "1"
-    },
-    {
-        "name": "microsoft.com",
-        "template": "simple-medium",
-        "counter": "1"
-    }
-];
+var sites = [];
 
 var template_all = "abcdefghijklmnopqrstuvwyxzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!$%&/()=?-_,.;:";
 var template_simple = "abcdefghijklmnopqrstuvwyxzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
@@ -104,12 +93,14 @@ function appendSite(i, item) {
 }
 
 $(function () {
+    if (localStorage.sites) {
+        sites = JSON.parse(localStorage.sites);
+    }
+
     $.each(sites, function (i, item) {
         appendSite(i, item);
     });
-});
 
-$(function () {
     $('#masterPassword, #name').on('input propertychange paste', function () {
         generatePasswords();
     });
@@ -121,6 +112,8 @@ $(function () {
         var i = sites.length;
         appendSite(i, site);
         sites.push(site);
-        $('#password-' + i).val(generatePassword(site));
+        localStorage.sites = JSON.stringify(sites);
+
+        generatePasswords();
     });
 });
