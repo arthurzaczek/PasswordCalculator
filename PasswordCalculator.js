@@ -142,4 +142,20 @@ $(function () {
             localStorage.name = "";
         }
     });
+
+    $("#btnExport").click(function () {
+        this.href = 'data:plain/text,' + JSON.stringify(sites);
+    });
+
+    $("#fileImport").change(function (event) {
+        var fr = new FileReader();
+        fr.onload = function () {
+            sites = JSON.parse(this.result);
+            localStorage.sites = JSON.stringify(sites);
+            $('#accordion').empty();
+            $.each(sites, appendSiteHtml);
+            generatePasswords();
+        }
+        fr.readAsText(this.files[0]);
+    });
 });
