@@ -142,4 +142,8 @@ $(function () {
             localStorage.name = "";
         }
     });
+
+    $("#btnExport").click(function () {
+        this.href = 'data:plain/text,' + JSON.stringify(sites);
+    });
 });
