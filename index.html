@@ -78,8 +78,14 @@
                 <div class="panel panel-default">
                     <div class="panel-heading"><h4 class="panel-title">Export/Import</h4></div>
                     <div class="panel-body">
-                        <a href="#" id="btnExport" class="btn btn-primary" download="PawwordCalculator.json">Export</a>
-                        <button id="btnImport" class="btn btn-defautl">Import</button>
+                        <div class="form-group">
+                            <label for="btnExport">Export</label><br />
+                            <a href="#" id="btnExport" class="btn btn-primary" download="PawwordCalculator.json">Export</a>
+                        </div>
+                        <div class="form-group">
+                            <label for="fileImport">Import</label>
+                            <input type="file" id="fileImport" />
+                        </div>
                     </div>
                 </div>
             </div>
