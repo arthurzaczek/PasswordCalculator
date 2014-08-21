@@ -125,7 +125,18 @@ $(function () {
         $('#saveName').prop('checked', true);
     }
     $('#name').val(localStorage.name);
-    $('#serviceUrl').val(localStorage.serviceUrl);
+	if(localStorage.serviceUrl) {
+		$('#serviceUrl').val(localStorage.serviceUrl);
+	} else {
+		$('#serviceUrl').val(document.baseURI.substr(0,document.URL.lastIndexOf('/')));
+	}
+	
+	$('#btnUseCurrentUrl').click(function() {
+		var url = document.baseURI.substr(0,document.URL.lastIndexOf('/'));
+		$('#serviceUrl').val(url);
+		localStorage.serviceUrl = url;
+	});
+	
     $.each(sites, appendSiteHtml);
 
     $('#masterPassword, #name').on('input propertychange paste', function () {
