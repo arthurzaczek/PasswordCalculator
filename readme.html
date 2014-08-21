@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Password Generator</title>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+    <!-- Bootstrap -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="stylesheet.css">
+</head>
+<body>
+    <div class="container">
+        <div class="jumbotron">
+            <h1>Password Calculator</h1>
+            <p>Calculates a password from a master password, your name and the site name.</p>
+			<a href="index.html" class="btn btn-primary pull-right">Start using it</a>
+        </div>
+		<h1>What is it?</h1>
+		<p>
+			Password Calculator takes a master password, your name and a site name to calculate a password. 
+			The password - and of course the master password - will never be stored, it will always be calculated.
+		</p>
+		<p>
+			This means, you do not have to save a key store file. Every password can be calculated any time, anywhere. This is possible because you know the necessary information.
+		</p>
+		<div class="well lead text-center">
+			Your name + Master password + Site name = Your password for the site
+		</div>
+		<h1>The details</h1>
+		<p>
+			In the key section you specify your name, which can be saved, and your master password. As soon as you change your master password, all site passwords will be calculated.
+		</p>
+		<p>
+			All your saved sites are listed in the main area. Click on a header to expand a site.
+		<p>
+		<p>
+			A new site can be added in the "New site" panel. There you specify the site name (I recommend using one naming schema, google.com or www.google.com or https://www.google.com), a template and a counter.
+			The counter should be incremented/set when you need a new password for the site.
+		</p>
+		<p>
+			A template defines how many characters and which characters a password will have:
+			<table class="table table-striped">
+				<tr>
+					<td>Default &amp; long</td><td>32 latin characters, numbers and some <em>special</em> characters</td>
+				</tr>
+				<tr>
+					<td>Default &amp; medium</td><td>10 latin characters, numbers and some <em>special</em> characters</td>
+				</tr>
+				<tr>
+					<td>Default &amp; short</td><td>6 latin characters, numbers and some <em>special</em> characters</td>
+				</tr>
+				<tr>
+					<td>Simple &amp; long</td><td>32 latin characters and numbers</td>
+				</tr>
+				<tr>
+					<td>Simple &amp; medium</td><td>10 latin characters and numbers</td>
+				</tr>
+				<tr>
+					<td>Simple &amp; short</td><td>6 latin characters and numbers</td>
+				</tr>
+				<tr>
+					<td>Pin, medium</td><td>10 Numbers</td>
+				</tr>
+				<tr>
+					<td>Pin, short</td><td>4 Numbers</td>
+				</tr>
+			</table>
+		</p>
+		<h1>Storage</h1>
+		<p>
+			<strong>NO PASSWORD WILL BE STORED!</strong> Never, ever! For your convenience only site configuration will be stored, optional your name.
+		</p>
+		<p>
+			Currently, your browses local storage will be used. You can export and import your configuration in export/import panel and transfer it to another device. 
+			As you can always reconstruct your passwords, this is only for your convenience.
+		</p>
+		<p>
+			A configuration is a JSON document and looks like this:
+		</p>
+		<pre>
+[
+	{
+		"name":"google.com",
+		"template":"default-long",
+		"counter":"1"
+	},
+	{
+		"name":"derstandard.at",
+		"template":"pin-short",
+		"counter":"1"
+	}
+]
+		</pre>
+		<p>There is no secret, you can even safely publish this information like I do in this example. With this information they cannot calculate your site's password or even worse your master password.</p>
+    </div>
+</body>
+</html>
+
