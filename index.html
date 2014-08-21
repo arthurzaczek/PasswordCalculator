@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Password Generator</title>
+    <title>Password Calculator</title>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -31,7 +31,7 @@
             <p>Calculates a password from a master password, your name and the site name. <a href="readme.html">Read more...</a></p>
         </div>
         <div class="row">
-            <div class="col-sm-4">
+            <div class="col-sm-3">
                 <div class="panel panel-default">
                     <div class="panel-heading"><h4 class="panel-title">Key</h4></div>
                     <div class="panel-body">
@@ -50,6 +50,12 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="panel-group" id="accordion">
+                </div>
+            </div>
+            <div class="col-sm-3">
                 <div class="panel panel-default">
                     <div class="panel-heading"><h4 class="panel-title">New site</h4></div>
                     <div class="panel-body">
@@ -91,10 +97,6 @@
                             <input type="file" id="fileImport" />
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-sm-8">
-                <div class="panel-group" id="accordion">
                 </div>
             </div>
         </div>
