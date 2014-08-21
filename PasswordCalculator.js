@@ -86,8 +86,9 @@ function appendSiteHtml(idx, item) {
         ),
         $('<div id="collapse-' + idx + '" class="panel-collapse collapse">').append(
             $('<div class="panel-body">').append(
-                $('<input type="text" readonly class="form-control" id="password-' + idx + '">').val(''),
-                $('<button class="btn btn-danger pull-right spacer" onclick="removeSite(' + idx + ')">Remove</button>')
+                $('<input type="text" readonly class="form-control password-control" id="password-' + idx + '">').val(''),
+                $('<button class="btn btn-danger pull-right spacer" onclick="removeSite(' + idx + ')">Remove</button>'),
+                $('<p class="spacer">').text('Template: ' + item.template + "; Counter: " + item.counter)
             )
         )
     ).appendTo('#accordion');
@@ -97,7 +98,7 @@ function addSite() {
     var site = {
         "name": $('#site').val(),
         "template": $('#template').val(),
-        "counter": "1"
+        "counter": $('#counter').val()
     };
     var i = sites.length;
     appendSiteHtml(i, site);
