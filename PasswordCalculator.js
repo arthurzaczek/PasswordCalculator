@@ -125,6 +125,7 @@ $(function () {
         $('#saveName').prop('checked', true);
     }
     $('#name').val(localStorage.name);
+    $('#serviceUrl').val(localStorage.serviceUrl);
     $.each(sites, appendSiteHtml);
 
     $('#masterPassword, #name').on('input propertychange paste', function () {
@@ -132,6 +133,9 @@ $(function () {
             localStorage.name = $('#name').val();
         }
         generatePasswords();
+    });
+    $('#serviceUrl').on('input propertychange paste', function () {
+		localStorage.serviceUrl = $('#serviceUrl').val();
     });
     $('#btnAdd').click(addSite);
     $('#saveName').click(function () {
