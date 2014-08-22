@@ -4,8 +4,20 @@ var template_all = "abcdefghijklmnopqrstuvwyxzABCDEFGHIJKLMNOPQRSTUVWXYZ12345678
 var template_simple = "abcdefghijklmnopqrstuvwyxzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 var template_numbers = "1234567890";
 
+var ctrl_saveName;
+var ctrl_name;
+var ctrl_serviceUrl;
+var ctrl_masterPassword;
+
+var ctrl_fileImport;
+var ctrl_accordion;
+
+var ctrl_btnUseCurrentUrl;
+var ctrl_btnAdd;
+var ctrl_btnExport;
+
 function generatePassword(site) {
-    var source = "" + $('#masterPassword').val() + "-" + $('#name').val() + "-" + site.name + "-" + site.counter;
+    var source = "" + ctrl_masterPassword.val() + "-" + ctrl_name.val() + "-" + site.name + "-" + site.counter;
     var hash = wordArrayToUint8Array(CryptoJS.SHA256(source));
     var template, size;
 
@@ -118,57 +130,81 @@ function removeSite(idx) {
 }
 
 $(function () {
+	// grab and save controls
+	ctrl_name = $('#name');
+	ctrl_saveName = $('#saveName');
+	ctrl_masterPassword = $('#masterPassword');
+	ctrl_serviceUrl = $('#serviceUrl');
+
+	ctrl_fileImport = $("#fileImport");
+	ctrl_accordion = $('#accordion');
+
+	ctrl_btnUseCurrentUrl = $('#btnUseCurrentUrl');
+	ctrl_btnAdd = $('#btnAdd');
+	ctrl_btnExport = $("#btnExport");
+
+	// restore sites	
     if (localStorage.sites) {
         sites = JSON.parse(localStorage.sites);
     }
-    if (localStorage.saveName) {
-        $('#saveName').prop('checked', true);
-    }
-    $('#name').val(localStorage.name);
-	if(localStorage.serviceUrl) {
-		$('#serviceUrl').val(localStorage.serviceUrl);
-	} else {
-		$('#serviceUrl').val(document.baseURI.substr(0,document.URL.lastIndexOf('/')));
-	}
-	
-	$('#btnUseCurrentUrl').click(function() {
-		var url = document.baseURI.substr(0,document.URL.lastIndexOf('/'));
-		$('#serviceUrl').val(url);
-		localStorage.serviceUrl = url;
-	});
-	
     $.each(sites, appendSiteHtml);
-
-    $('#masterPassword, #name').on('input propertychange paste', function () {
+	
+	// initialize basic information section
+    if (localStorage.saveName) {
+        ctrl_saveName.prop('checked', true);
+    }
+    ctrl_name.val(localStorage.name);
+    ctrl_name.on('input propertychange paste', function () {
         if (localStorage.saveName) {
-            localStorage.name = $('#name').val();
+            localStorage.name = ctrl_name.val();
         }
         generatePasswords();
     });
-    $('#serviceUrl').on('input propertychange paste', function () {
-		localStorage.serviceUrl = $('#serviceUrl').val();
-    });
-    $('#btnAdd').click(addSite);
-    $('#saveName').click(function () {
-        if ($('#saveName').prop('checked')) {
+    ctrl_saveName.click(function () {
+        if (ctrl_saveName.prop('checked')) {
             localStorage.saveName = true;
-            localStorage.name = $('#name').val();
+            localStorage.name = ctrl_name.val();
         } else {
             localStorage.removeItem('saveName');
             localStorage.name = "";
         }
     });
 
-    $("#btnExport").click(function () {
+	// master password
+	ctrl_masterPassword.on('input propertychange paste', function () {
+        generatePasswords();
+    });
+	
+	// new site
+    ctrl_btnAdd.click(addSite);
+
+	
+	// Export/Import
+	if(localStorage.serviceUrl) {
+		ctrl_serviceUrl.val(localStorage.serviceUrl);
+	} else {
+		ctrl_serviceUrl.val(document.baseURI.substr(0,document.URL.lastIndexOf('/')));
+	}
+    ctrl_serviceUrl.on('input propertychange paste', function () {
+		localStorage.serviceUrl = ctrl_serviceUrl.val();
+    });
+
+	ctrl_btnUseCurrentUrl.click(function() {
+		var url = document.baseURI.substr(0,document.URL.lastIndexOf('/'));
+		ctrl_serviceUrl.val(url);
+		localStorage.serviceUrl = url;
+	});
+
+    ctrl_btnExport.click(function () {
         this.href = 'data:plain/text,' + JSON.stringify(sites);
     });
 
-    $("#fileImport").change(function (event) {
+    ctrl_fileImport.change(function (event) {
         var fr = new FileReader();
         fr.onload = function () {
             sites = JSON.parse(this.result);
             localStorage.sites = JSON.stringify(sites);
-            $('#accordion').empty();
+            ctrl_accordion.empty();
             $.each(sites, appendSiteHtml);
             generatePasswords();
         }
