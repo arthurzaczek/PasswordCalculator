@@ -16,6 +16,8 @@ var ctrl_btnUseCurrentUrl;
 var ctrl_btnAdd;
 var ctrl_btnExport;
 
+var ctrl_alertDownloadSiteConfig;
+
 function generatePassword(site) {
     var source = "" + ctrl_masterPassword.val() + "-" + ctrl_name.val() + "-" + site.name + "-" + site.counter;
     var hash = wordArrayToUint8Array(CryptoJS.SHA256(source));
@@ -139,24 +141,32 @@ function updateSites(data) {
 
 function downloadSites() {
 	var url = ctrl_serviceUrl.val() + "/service.php?action=get&name=" + encodeURIComponent(ctrl_name.val());
+	console.log( "downloading sites from " + url);
 	$.getJSON(url, null, function(data) { 
 		updateSites(data);
+		ctrl_alertDownloadSiteConfig.addClass("hide");
+	})
+	.fail(function() {
+		console.log( "error downloading sites");
+		ctrl_alertDownloadSiteConfig.removeClass("hide");
 	});
 }
 
 $(function () {
 	// grab and save controls
-	ctrl_name = $('#name');
-	ctrl_saveName = $('#saveName');
-	ctrl_masterPassword = $('#masterPassword');
-	ctrl_serviceUrl = $('#serviceUrl');
+	ctrl_name = $("#name");
+	ctrl_saveName = $("#saveName");
+	ctrl_masterPassword = $("#masterPassword");
+	ctrl_serviceUrl = $("#serviceUrl");
 
 	ctrl_fileImport = $("#fileImport");
-	ctrl_accordion = $('#accordion');
+	ctrl_accordion = $("#accordion");
 
-	ctrl_btnUseCurrentUrl = $('#btnUseCurrentUrl');
-	ctrl_btnAdd = $('#btnAdd');
+	ctrl_btnUseCurrentUrl = $("#btnUseCurrentUrl");
+	ctrl_btnAdd = $("#btnAdd");
 	ctrl_btnExport = $("#btnExport");
+	
+	ctrl_alertDownloadSiteConfig = $("#alertDownloadSiteConfig");
 
 	// restore sites	
     if (localStorage["sites"]) {
