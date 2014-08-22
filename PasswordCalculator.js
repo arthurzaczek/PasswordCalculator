@@ -144,29 +144,29 @@ $(function () {
 	ctrl_btnExport = $("#btnExport");
 
 	// restore sites	
-    if (localStorage.sites) {
-        sites = JSON.parse(localStorage.sites);
+    if (localStorage["sites"]) {
+        sites = JSON.parse(localStorage["sites"]);
     }
     $.each(sites, appendSiteHtml);
 	
 	// initialize basic information section
-    if (localStorage.saveName) {
+    if (localStorage["saveName"]) {
         ctrl_saveName.prop('checked', true);
     }
-    ctrl_name.val(localStorage.name);
+    ctrl_name.val(localStorage["name"]);
     ctrl_name.on('input propertychange paste', function () {
-        if (localStorage.saveName) {
-            localStorage.name = ctrl_name.val();
+        if (localStorage["saveName"]) {
+            localStorage["name"] = ctrl_name.val();
         }
         generatePasswords();
     });
     ctrl_saveName.click(function () {
         if (ctrl_saveName.prop('checked')) {
-            localStorage.saveName = true;
-            localStorage.name = ctrl_name.val();
+            localStorage["saveName"] = true;
+            localStorage["name"] = ctrl_name.val();
         } else {
-            localStorage.removeItem('saveName');
-            localStorage.name = "";
+            localStorage.removeItem("saveName");
+            localStorage["name"] = "";
         }
     });
 
@@ -180,19 +180,19 @@ $(function () {
 
 	
 	// Export/Import
-	if(localStorage.serviceUrl) {
-		ctrl_serviceUrl.val(localStorage.serviceUrl);
+	if(localStorage["serviceUrl"]) {
+		ctrl_serviceUrl.val(localStorage["serviceUrl"]);
 	} else {
 		ctrl_serviceUrl.val(document.baseURI.substr(0,document.URL.lastIndexOf('/')));
 	}
     ctrl_serviceUrl.on('input propertychange paste', function () {
-		localStorage.serviceUrl = ctrl_serviceUrl.val();
+		localStorage["serviceUrl"] = ctrl_serviceUrl.val();
     });
 
 	ctrl_btnUseCurrentUrl.click(function() {
 		var url = document.baseURI.substr(0,document.URL.lastIndexOf('/'));
 		ctrl_serviceUrl.val(url);
-		localStorage.serviceUrl = url;
+		localStorage["serviceUrl"] = url;
 	});
 
     ctrl_btnExport.click(function () {
@@ -203,7 +203,7 @@ $(function () {
         var fr = new FileReader();
         fr.onload = function () {
             sites = JSON.parse(this.result);
-            localStorage.sites = JSON.stringify(sites);
+            localStorage["sites"] = JSON.stringify(sites);
             ctrl_accordion.empty();
             $.each(sites, appendSiteHtml);
             generatePasswords();
