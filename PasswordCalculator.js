@@ -129,6 +129,21 @@ function removeSite(idx) {
     generatePasswords();
 }
 
+function updateSites(data) {
+	sites = data;
+	localStorage["sites"] = JSON.stringify(sites);
+	ctrl_accordion.empty();
+	$.each(sites, appendSiteHtml);
+	generatePasswords();
+}
+
+function downloadSites() {
+	var url = ctrl_serviceUrl.val() + "/service.php?action=get&name=" + encodeURIComponent(ctrl_name.val());
+	$.getJSON(url, null, function(data) { 
+		updateSites(data);
+	});
+}
+
 $(function () {
 	// grab and save controls
 	ctrl_name = $('#name');
@@ -159,6 +174,7 @@ $(function () {
             localStorage["name"] = ctrl_name.val();
         }
         generatePasswords();
+		downloadSites();
     });
     ctrl_saveName.click(function () {
         if (ctrl_saveName.prop('checked')) {
@@ -178,21 +194,21 @@ $(function () {
 	// new site
     ctrl_btnAdd.click(addSite);
 
-	
 	// Export/Import
 	if(localStorage["serviceUrl"]) {
 		ctrl_serviceUrl.val(localStorage["serviceUrl"]);
-	} else {
-		ctrl_serviceUrl.val(document.baseURI.substr(0,document.URL.lastIndexOf('/')));
+		downloadSites();
 	}
     ctrl_serviceUrl.on('input propertychange paste', function () {
 		localStorage["serviceUrl"] = ctrl_serviceUrl.val();
+		downloadSites();
     });
 
 	ctrl_btnUseCurrentUrl.click(function() {
 		var url = document.baseURI.substr(0,document.URL.lastIndexOf('/'));
 		ctrl_serviceUrl.val(url);
 		localStorage["serviceUrl"] = url;
+		downloadSites();
 	});
 
     ctrl_btnExport.click(function () {
@@ -202,11 +218,7 @@ $(function () {
     ctrl_fileImport.change(function (event) {
         var fr = new FileReader();
         fr.onload = function () {
-            sites = JSON.parse(this.result);
-            localStorage["sites"] = JSON.stringify(sites);
-            ctrl_accordion.empty();
-            $.each(sites, appendSiteHtml);
-            generatePasswords();
+			updateSites(JSON.parse(this.result));
         }
         fr.readAsText(this.files[0]);
     });
