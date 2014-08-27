@@ -2,11 +2,15 @@
     margin-top: 1em;
 }
 
+.spacer-left {
+    margin-left: 1em;
+}
+
 .form-control[readonly].password-control {
     cursor: text;
 }
 
-.alert {
+.alert-bar {
 	display: none;
 	position: fixed;
 	width: 100%;

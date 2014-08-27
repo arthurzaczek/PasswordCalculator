@@ -98,7 +98,10 @@ function appendSiteHtml(idx, item) {
     $('<div class="panel panel-default" id="site-panel-' + idx + '">').append(
         $('<div class="panel-heading">').append(
             $('<h4 class="panel-title">').append(
-                $('<a data-toggle="collapse" data-parent="#accordion" href="#collapse-' + idx + '">').text(item.name)
+                $('<a data-toggle="collapse" data-parent="#accordion" href="#collapse-' + idx + '">').append(
+					$('<span class="glyphicon glyphicon-bookmark"></span>'),
+					$('<span class="spacer-left">').text(item.name)
+				)
             )
         ),
         $('<div id="collapse-' + idx + '" class="panel-collapse collapse">').append(
@@ -172,12 +175,12 @@ function uploadSites() {
 		dataType: 'json'		
 	})
 	.done(function() {
+		ctrl_alertUploadSiteConfig.fadeOut(0);
 		ctrl_infoUploadSiteConfig.fadeIn().delay(2000).fadeOut();
-		ctrl_alertUploadSiteConfig.fadeOut();
 	})
 	.fail(function(jqXHR, textStatus, errorThrown) {
 		console.log( "error uploading sites");
-		ctrl_infoUploadSiteConfig.fadeOut();
+		ctrl_infoUploadSiteConfig.fadeOut(0);
 		ctrl_alertUploadSiteConfig.fadeIn();
 	});
 }
