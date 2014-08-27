@@ -79,12 +79,20 @@
 		</p>
 		<h1>Storage</h1>
 		<p>
-			<strong>NO PASSWORD WILL BE STORED!</strong> Never, ever! For your convenience only site configuration will be stored, optional your name.
+			<div class="alert alert-info">NO PASSWORD WILL BE STORED!</div> 
+			Never, ever! For your convenience only site configuration will be stored, optional your name.
 		</p>
+		<h2>Local cache, export/import</h2>
 		<p>
-			Currently, your browses local storage will be used. You can export and import your configuration in export/import panel and transfer it to another device. 
+			Your sites are cached in the browses local storage. You can export and import your configuration in export/import panel and transfer it to another device. 
 			As you can always reconstruct your passwords, this is only for your convenience.
 		</p>
+		<h2>Service</h2>
+		<p>
+			If a service URL is provided the sites are stored on a server. Multiple user are supported. The site configuration will be saved in a json file.
+		</p>
+		<div class="alert alert-warning">Note that currently there is NO SECURITY implemented yet. Others can simply upload/download any file. The security feature will be implemented soon.</div>
+		<h2>What is stored</h2>
 		<p>
 			A configuration is a JSON document and looks like this:
 		</p>
