@@ -5,3 +5,10 @@
 .form-control[readonly].password-control {
     cursor: text;
 }
+
+.alert {
+	display: none;
+	position: fixed;
+	width: 100%;
+	z-index: 999;
+}

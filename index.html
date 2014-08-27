@@ -25,12 +25,14 @@
     <link rel="stylesheet" href="stylesheet.css">
 </head>
 <body>
+	<div id="alertDownloadSiteConfig" class="alert alert-warning" role="alert">Unable to download site configuration. Using local cached version instead.</div>
+	<div id="alertUploadSiteConfig" class="alert alert-danger" role="alert">Unable to upload site configuration.</div>
+	<div id="infoUploadSiteConfig" class="alert alert-success" role="alert">Site configuration saved successful.</div>
     <div class="container">
         <div class="jumbotron">
             <h1>Password Calculator</h1>
             <p>Calculates a password from a master password, your name and the site name. <a href="readme.html">Read more...</a></p>
         </div>
-		<div id="alertDownloadSiteConfig" class="alert alert-warning hide" role="alert">Unable to download site configuration. Using local cached version instead.</div>
         <div class="row">
             <div class="col-sm-3">
                 <div class="panel panel-default">
@@ -101,6 +103,7 @@
                             <label for="serviceUrl">Service</label>
                             <input type="text" class="form-control" id="serviceUrl" placeholder="https://www.my-web-site.com/pc" value="">
 							<button class="btn btn-default spacer" id="btnUseCurrentUrl">Use current</button>
+							<button class="btn btn-default spacer pull-right" id="btnSaveNow">Save</button>
                         </div>
                     </div>
                 </div>

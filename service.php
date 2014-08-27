@@ -23,6 +23,11 @@ if($action == 'get') {
 		echo 'The file '.$filename.' that you have requested could not be found.';
 		exit();
 	}
+} else if($action == 'post') {
+	$str_json = file_get_contents('php://input');
+	file_put_contents($filename, $str_json, LOCK_EX);
+	echo '{ "success": "true" }';
+	exit();
 } else {
 ?>
 <!DOCTYPE html>

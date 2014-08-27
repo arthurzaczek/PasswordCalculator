@@ -15,8 +15,11 @@ var ctrl_accordion;
 var ctrl_btnUseCurrentUrl;
 var ctrl_btnAdd;
 var ctrl_btnExport;
+var ctrl_btnSaveNow;
 
 var ctrl_alertDownloadSiteConfig;
+var ctrl_alertUploadSiteConfig;
+var ctrl_infoUploadSiteConfig;
 
 function generatePassword(site) {
     var source = "" + ctrl_masterPassword.val() + "-" + ctrl_name.val() + "-" + site.name + "-" + site.counter;
@@ -118,6 +121,7 @@ function addSite() {
     appendSiteHtml(i, site);
     sites.push(site);
     localStorage.sites = JSON.stringify(sites);
+	uploadSites();
 
     generatePasswords();
 }
@@ -127,6 +131,7 @@ function removeSite(idx) {
     $('#site-panel-' + idx).remove();
 
     localStorage.sites = JSON.stringify(sites);
+	uploadSites();
 
     generatePasswords();
 }
@@ -140,15 +145,40 @@ function updateSites(data) {
 }
 
 function downloadSites() {
+	if(!ctrl_serviceUrl.val()) return;
+	
 	var url = ctrl_serviceUrl.val() + "/service.php?action=get&name=" + encodeURIComponent(ctrl_name.val());
 	console.log( "downloading sites from " + url);
-	$.getJSON(url, null, function(data) { 
+	$.getJSON(url)
+	.done(function(data) { 
 		updateSites(data);
 		ctrl_alertDownloadSiteConfig.addClass("hide");
 	})
 	.fail(function() {
 		console.log( "error downloading sites");
 		ctrl_alertDownloadSiteConfig.removeClass("hide");
+	});
+}
+
+function uploadSites() {
+	if(!ctrl_serviceUrl.val()) return;
+
+	var url = ctrl_serviceUrl.val() + "/service.php?action=post&name=" + encodeURIComponent(ctrl_name.val());
+	console.log( "uploading sites from " + url);
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: JSON.stringify(sites),
+		dataType: 'json'		
+	})
+	.done(function() {
+		ctrl_infoUploadSiteConfig.fadeIn().delay(2000).fadeOut();
+		ctrl_alertUploadSiteConfig.fadeOut();
+	})
+	.fail(function(jqXHR, textStatus, errorThrown) {
+		console.log( "error uploading sites");
+		ctrl_infoUploadSiteConfig.fadeOut();
+		ctrl_alertUploadSiteConfig.fadeIn();
 	});
 }
 
@@ -165,8 +195,12 @@ $(function () {
 	ctrl_btnUseCurrentUrl = $("#btnUseCurrentUrl");
 	ctrl_btnAdd = $("#btnAdd");
 	ctrl_btnExport = $("#btnExport");
+	ctrl_btnSaveNow = $("#btnSaveNow");
 	
 	ctrl_alertDownloadSiteConfig = $("#alertDownloadSiteConfig");
+	ctrl_alertUploadSiteConfig = $("#alertUploadSiteConfig");
+	ctrl_infoUploadSiteConfig = $("#infoUploadSiteConfig");
+
 
 	// restore sites	
     if (localStorage["sites"]) {
@@ -219,6 +253,9 @@ $(function () {
 		ctrl_serviceUrl.val(url);
 		localStorage["serviceUrl"] = url;
 		downloadSites();
+	});
+	ctrl_btnSaveNow.click(function() {
+		uploadSites();
 	});
 
     ctrl_btnExport.click(function () {
