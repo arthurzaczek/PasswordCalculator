@@ -1,9 +1,28 @@
 <?php 
+// error_reporting(E_ALL);
+// ini_set("display_errors", 1);
+
 $action = $_REQUEST['action'];
 $name = $_REQUEST['name'];
-$filename = 'data/'.preg_replace("([^\w\s\d\-_~,;:\[\]\(\].]|[\.]{2,})", '', $name).'.json';
+$auth_token = $_REQUEST['auth_token'];
+$filename = 'data/sites_'.preg_replace("([^\w\s\d\-_~,;:\[\]\(\].]|[\.]{2,})", '', $name).'.json';
+
+function checkAuthToken($name, $auth_token) {
+	$auth = json_decode(file_get_contents('data/auth.json'));
+	foreach($auth as $i) {
+		if($i->name==$name && $i->auth_token==$auth_token) {
+			return;
+		}
+	}
+
+	header('HTTP/1.0 401 Unauthorized');
+	echo "<h1>401 Unauthorized</h1>";
+	echo 'The auth token is missing or invalid.';
+	exit();
+}
 
 if($action == 'get') {
+	checkAuthToken($name, $auth_token);
 	if (file_exists($filename)) {
 		header('Content-Description: File Transfer');
 		header('Content-Type: application/octet-stream');
@@ -16,7 +35,7 @@ if($action == 'get') {
 		ob_clean();
 		flush();
 		readfile($filename);
-    exit;
+		exit();
 	} else {
 		header('HTTP/1.0 404 Not Found');
 		echo "<h1>404 Not Found</h1>";
@@ -24,6 +43,7 @@ if($action == 'get') {
 		exit();
 	}
 } else if($action == 'post') {
+	checkAuthToken($name, $auth_token);
 	$str_json = file_get_contents('php://input');
 	file_put_contents($filename, $str_json, LOCK_EX);
 	echo '{ "success": "true" }';
