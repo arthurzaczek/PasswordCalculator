@@ -155,11 +155,11 @@ function downloadSites() {
 	$.getJSON(url)
 	.done(function(data) { 
 		updateSites(data);
-		ctrl_alertDownloadSiteConfig.addClass("hide");
+		ctrl_alertDownloadSiteConfig.fadeOut(0);
 	})
 	.fail(function() {
 		console.log( "error downloading sites");
-		ctrl_alertDownloadSiteConfig.removeClass("hide");
+		ctrl_alertDownloadSiteConfig.fadeIn();
 	});
 }
 
