@@ -6,8 +6,9 @@ var template_numbers = "1234567890";
 
 var ctrl_saveName;
 var ctrl_name;
-var ctrl_serviceUrl;
 var ctrl_masterPassword;
+var ctrl_serviceUrl;
+var ctrl_servicePassword;
 
 var ctrl_fileImport;
 var ctrl_accordion;
@@ -92,6 +93,8 @@ function generatePasswords() {
     $.each(sites, function (idx, item) {
         $('#password-' + idx).val(generatePassword(item));
     });
+	
+	ctrl_servicePassword.val(generatePassword({name: 'service', counter: 1, template: 'default-long'}));
 }
 
 function appendSiteHtml(idx, item) {
@@ -150,7 +153,7 @@ function updateSites(data) {
 function downloadSites() {
 	if(!ctrl_serviceUrl.val()) return;
 	
-	var url = ctrl_serviceUrl.val() + "/service.php?action=get&name=" + encodeURIComponent(ctrl_name.val());
+	var url = ctrl_serviceUrl.val() + "/service.php?action=get&name=" + encodeURIComponent(ctrl_name.val()) + "&auth_token=" + encodeURIComponent(ctrl_servicePassword.val());
 	console.log( "downloading sites from " + url);
 	$.getJSON(url)
 	.done(function(data) { 
@@ -191,6 +194,7 @@ $(function () {
 	ctrl_saveName = $("#saveName");
 	ctrl_masterPassword = $("#masterPassword");
 	ctrl_serviceUrl = $("#serviceUrl");
+	ctrl_servicePassword = $("#servicePassword");
 
 	ctrl_fileImport = $("#fileImport");
 	ctrl_accordion = $("#accordion");
@@ -236,6 +240,7 @@ $(function () {
 	// master password
 	ctrl_masterPassword.on('input propertychange paste', function () {
         generatePasswords();
+		downloadSites();
     });
 	
 	// new site
