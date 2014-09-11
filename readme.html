@@ -78,8 +78,8 @@
 			</table>
 		</p>
 		<h1>Storage</h1>
+		<div class="alert alert-info">NO PASSWORD WILL BE STORED!</div> 
 		<p>
-			<div class="alert alert-info">NO PASSWORD WILL BE STORED!</div> 
 			Never, ever! For your convenience only site configuration will be stored, optional your name.
 		</p>
 		<h2>Local cache, export/import</h2>
@@ -89,9 +89,19 @@
 		</p>
 		<h2>Service</h2>
 		<p>
-			If a service URL is provided the sites are stored on a server. Multiple user are supported. The site configuration will be saved in a json file.
+			If a service URL is provided the sites are stored on a server. Multiple user are supported. The site configuration and access credentials will be saved in a json file. 
 		</p>
-		<div class="alert alert-warning">Note that currently there is NO SECURITY implemented yet. Others can simply upload/download any file. The security feature will be implemented soon.</div>
+		<table class="table table-striped">
+			<tr>
+				<td>data/sites_<Your Name>.json</td><td>Your site configuration.json</td>
+			</tr>
+			<tr>
+				<td>data/sites_<Another User>.json</td><td>Your site configuration for anther user.json</td>
+			</tr>
+			<tr>
+				<td>data/auth.json</td><td>Your credentials store for accessing the service.json</td>
+			</tr>
+		</table>
 		<h2>What is stored</h2>
 		<p>
 			A configuration is a JSON document and looks like this:
@@ -111,7 +121,25 @@
 ]
 		</pre>
 		<p>There is no secret, you can even safely publish this information like I do in this example. With this information they cannot calculate your site's password or even worse your master password.</p>
-
+		<p>
+			A credentials store is a JSON document and looks like this:
+		</p>
+		<pre>
+[
+	{
+		"name":"Your Name",
+		"auth_token":"Your Token shown on your site after master password was entered"
+	},
+	{
+		"name":"Another user",
+		"auth_token":"Anothers user token shown on your site after master password was entered"
+	}
+]
+		</pre>
+		<p>
+		<strong>You</strong> must create this file. The easiest way to creat it is to rename <code>data/auth.json.example</code> to <code>data/auth.json</code>
+		</p>
+		<div class="alert alert-info">Note: The Auth-Token will be stored plain text. Remember, it's a calculated token from your Name (=salt) and your master password. Your master password will not be stored nor it can be calculated.</div> 
 		<h1>Installation</h1>
 		<p>
 		Either use the page on <a href="http://arthurzaczek.github.io/PasswordCalculator/" target="_blank">github.com</a> or ...
