@@ -5,7 +5,7 @@
 $action = $_REQUEST['action'];
 $name = $_REQUEST['name'];
 $auth_token = $_REQUEST['auth_token'];
-$filename = 'data/sites_'.preg_replace("([^\w\s\d\-_~,;:\[\]\(\].]|[\.]{2,})", '', $name).'.json';
+$filename =  $_SERVER{'DOCUMENT_ROOT'}.'/data/sites_'.preg_replace("([^\w\s\d\-_~,;:\[\]\(\].]|[\.]{2,})", '', $name).'.json';
 
 function checkAuthToken($name, $auth_token) {
 	$auth = json_decode(file_get_contents('data/auth.json'));
