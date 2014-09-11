@@ -169,7 +169,7 @@ function downloadSites() {
 function uploadSites() {
 	if(!ctrl_serviceUrl.val()) return;
 
-	var url = ctrl_serviceUrl.val() + "/service.php?action=post&name=" + encodeURIComponent(ctrl_name.val());
+	var url = ctrl_serviceUrl.val() + "/service.php?action=post&name=" + encodeURIComponent(ctrl_name.val()) + "&auth_token=" + encodeURIComponent(ctrl_servicePassword.val());
 	console.log( "uploading sites from " + url);
 	$.ajax({
 		url: url,
