@@ -25,6 +25,9 @@
     <link rel="stylesheet" href="stylesheet.css">
 </head>
 <body>
+	<div id="alertDownloadSiteConfig" class="alert alert-bar alert-warning" role="alert">Unable to download site configuration. Using local cached version instead.</div>
+	<div id="alertUploadSiteConfig" class="alert alert-bar alert-danger" role="alert">Unable to upload site configuration.</div>
+	<div id="infoUploadSiteConfig" class="alert alert-bar alert-success" role="alert">Site configuration saved successful.</div>
     <div class="container">
         <div class="jumbotron">
             <h1>Password Calculator</h1>
@@ -95,6 +98,18 @@
                         <div class="form-group">
                             <label for="fileImport">Import</label>
                             <input type="file" id="fileImport" />
+                        </div>
+                        <div class="form-group">
+                            <label for="serviceUrl">Service</label>
+                            <input type="text" class="form-control" id="serviceUrl" placeholder="https://www.my-web-site.com/pc" value="">
+						</div>
+                        <div class="form-group">
+							<label for="servicePassword">Token</label>
+							<input type="text" readonly class="form-control password-control" id="servicePassword">
+						</div>
+						<div>
+							<button class="btn btn-default" id="btnUseCurrentUrl">Use current</button>
+							<button class="btn btn-default pull-right" id="btnSaveNow">Save</button>
                         </div>
                     </div>
                 </div>

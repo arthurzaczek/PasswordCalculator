@@ -4,8 +4,26 @@ var template_all = "abcdefghijklmnopqrstuvwyxzABCDEFGHIJKLMNOPQRSTUVWXYZ12345678
 var template_simple = "abcdefghijklmnopqrstuvwyxzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 var template_numbers = "1234567890";
 
+var ctrl_saveName;
+var ctrl_name;
+var ctrl_masterPassword;
+var ctrl_serviceUrl;
+var ctrl_servicePassword;
+
+var ctrl_fileImport;
+var ctrl_accordion;
+
+var ctrl_btnUseCurrentUrl;
+var ctrl_btnAdd;
+var ctrl_btnExport;
+var ctrl_btnSaveNow;
+
+var ctrl_alertDownloadSiteConfig;
+var ctrl_alertUploadSiteConfig;
+var ctrl_infoUploadSiteConfig;
+
 function generatePassword(site) {
-    var source = "" + $('#masterPassword').val() + "-" + $('#name').val() + "-" + site.name + "-" + site.counter;
+    var source = "" + ctrl_masterPassword.val() + "-" + ctrl_name.val() + "-" + site.name + "-" + site.counter;
     var hash = wordArrayToUint8Array(CryptoJS.SHA256(source));
     var template, size;
 
@@ -75,13 +93,18 @@ function generatePasswords() {
     $.each(sites, function (idx, item) {
         $('#password-' + idx).val(generatePassword(item));
     });
+	
+	ctrl_servicePassword.val(generatePassword({name: 'service', counter: 1, template: 'default-long'}));
 }
 
 function appendSiteHtml(idx, item) {
     $('<div class="panel panel-default" id="site-panel-' + idx + '">').append(
         $('<div class="panel-heading">').append(
             $('<h4 class="panel-title">').append(
-                $('<a data-toggle="collapse" data-parent="#accordion" href="#collapse-' + idx + '">').text(item.name)
+                $('<a data-toggle="collapse" data-parent="#accordion" href="#collapse-' + idx + '">').append(
+					$('<span class="glyphicon glyphicon-bookmark"></span>'),
+					$('<span class="spacer-left">').text(item.name)
+				)
             )
         ),
         $('<div id="collapse-' + idx + '" class="panel-collapse collapse">').append(
@@ -104,6 +127,7 @@ function addSite() {
     appendSiteHtml(i, site);
     sites.push(site);
     localStorage.sites = JSON.stringify(sites);
+	uploadSites();
 
     generatePasswords();
 }
@@ -113,49 +137,143 @@ function removeSite(idx) {
     $('#site-panel-' + idx).remove();
 
     localStorage.sites = JSON.stringify(sites);
+	uploadSites();
 
     generatePasswords();
 }
 
-$(function () {
-    if (localStorage.sites) {
-        sites = JSON.parse(localStorage.sites);
-    }
-    if (localStorage.saveName) {
-        $('#saveName').prop('checked', true);
-    }
-    $('#name').val(localStorage.name);
-    $.each(sites, appendSiteHtml);
+function updateSites(data) {
+	sites = data;
+	localStorage["sites"] = JSON.stringify(sites);
+	ctrl_accordion.empty();
+	$.each(sites, appendSiteHtml);
+	generatePasswords();
+}
 
-    $('#masterPassword, #name').on('input propertychange paste', function () {
-        if (localStorage.saveName) {
-            localStorage.name = $('#name').val();
+function downloadSites() {
+	if(!ctrl_serviceUrl.val()) return;
+	
+	var url = ctrl_serviceUrl.val() + "/service.php?action=get&name=" + encodeURIComponent(ctrl_name.val()) + "&auth_token=" + encodeURIComponent(ctrl_servicePassword.val());
+	console.log( "downloading sites from " + url);
+	$.getJSON(url)
+	.done(function(data) { 
+		updateSites(data);
+		ctrl_alertDownloadSiteConfig.fadeOut(0);
+	})
+	.fail(function() {
+		console.log( "error downloading sites");
+		ctrl_alertDownloadSiteConfig.fadeIn();
+	});
+}
+
+function uploadSites() {
+	if(!ctrl_serviceUrl.val()) return;
+
+	var url = ctrl_serviceUrl.val() + "/service.php?action=post&name=" + encodeURIComponent(ctrl_name.val());
+	console.log( "uploading sites from " + url);
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: JSON.stringify(sites),
+		dataType: 'json'		
+	})
+	.done(function() {
+		ctrl_alertUploadSiteConfig.fadeOut(0);
+		ctrl_infoUploadSiteConfig.fadeIn().delay(2000).fadeOut();
+	})
+	.fail(function(jqXHR, textStatus, errorThrown) {
+		console.log( "error uploading sites");
+		ctrl_infoUploadSiteConfig.fadeOut(0);
+		ctrl_alertUploadSiteConfig.fadeIn();
+	});
+}
+
+$(function () {
+	// grab and save controls
+	ctrl_name = $("#name");
+	ctrl_saveName = $("#saveName");
+	ctrl_masterPassword = $("#masterPassword");
+	ctrl_serviceUrl = $("#serviceUrl");
+	ctrl_servicePassword = $("#servicePassword");
+
+	ctrl_fileImport = $("#fileImport");
+	ctrl_accordion = $("#accordion");
+
+	ctrl_btnUseCurrentUrl = $("#btnUseCurrentUrl");
+	ctrl_btnAdd = $("#btnAdd");
+	ctrl_btnExport = $("#btnExport");
+	ctrl_btnSaveNow = $("#btnSaveNow");
+	
+	ctrl_alertDownloadSiteConfig = $("#alertDownloadSiteConfig");
+	ctrl_alertUploadSiteConfig = $("#alertUploadSiteConfig");
+	ctrl_infoUploadSiteConfig = $("#infoUploadSiteConfig");
+
+
+	// restore sites	
+    if (localStorage["sites"]) {
+        sites = JSON.parse(localStorage["sites"]);
+    }
+    $.each(sites, appendSiteHtml);
+	
+	// initialize basic information section
+    if (localStorage["saveName"]) {
+        ctrl_saveName.prop('checked', true);
+    }
+    ctrl_name.val(localStorage["name"]);
+    ctrl_name.on('input propertychange paste', function () {
+        if (localStorage["saveName"]) {
+            localStorage["name"] = ctrl_name.val();
         }
         generatePasswords();
+		downloadSites();
     });
-    $('#btnAdd').click(addSite);
-    $('#saveName').click(function () {
-        if ($('#saveName').prop('checked')) {
-            localStorage.saveName = true;
-            localStorage.name = $('#name').val();
+    ctrl_saveName.click(function () {
+        if (ctrl_saveName.prop('checked')) {
+            localStorage["saveName"] = true;
+            localStorage["name"] = ctrl_name.val();
         } else {
-            localStorage.removeItem('saveName');
-            localStorage.name = "";
+            localStorage.removeItem("saveName");
+            localStorage["name"] = "";
         }
     });
 
-    $("#btnExport").click(function () {
+	// master password
+	ctrl_masterPassword.on('input propertychange paste', function () {
+        generatePasswords();
+		downloadSites();
+    });
+	
+	// new site
+    ctrl_btnAdd.click(addSite);
+
+	// Export/Import
+	if(localStorage["serviceUrl"]) {
+		ctrl_serviceUrl.val(localStorage["serviceUrl"]);
+		downloadSites();
+	}
+    ctrl_serviceUrl.on('input propertychange paste', function () {
+		localStorage["serviceUrl"] = ctrl_serviceUrl.val();
+		downloadSites();
+    });
+
+	ctrl_btnUseCurrentUrl.click(function() {
+		var url = document.baseURI.substr(0,document.URL.lastIndexOf('/'));
+		ctrl_serviceUrl.val(url);
+		localStorage["serviceUrl"] = url;
+		downloadSites();
+	});
+	ctrl_btnSaveNow.click(function() {
+		uploadSites();
+	});
+
+    ctrl_btnExport.click(function () {
         this.href = 'data:plain/text,' + JSON.stringify(sites);
     });
 
-    $("#fileImport").change(function (event) {
+    ctrl_fileImport.change(function (event) {
         var fr = new FileReader();
         fr.onload = function () {
-            sites = JSON.parse(this.result);
-            localStorage.sites = JSON.stringify(sites);
-            $('#accordion').empty();
-            $.each(sites, appendSiteHtml);
-            generatePasswords();
+			updateSites(JSON.parse(this.result));
         }
         fr.readAsText(this.files[0]);
     });
